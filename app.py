@@ -32,7 +32,7 @@ with st.sidebar:
                     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
                     splits = text_splitter.split_documents(docs)
                     
-                    # Create Vector Store (Memory) - USING LOCAL CPU MODEL NOW
+                    # Create Vector Store (Memory) - USING LOCAL CPU MODEL
                     embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
                     vectorstore = FAISS.from_documents(documents=splits, embedding=embeddings)
                     
@@ -44,8 +44,8 @@ with st.sidebar:
 
 # 3. Chat Interface
 if "vectorstore" in st.session_state:
-    # Initialize LLM
-    llm = ChatGoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=api_key)
+    # Initialize LLM - UPDATED TO GEMINI 2.5
+    llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", google_api_key=api_key)
     
     # Create Prompt Template
     prompt = ChatPromptTemplate.from_template("""
