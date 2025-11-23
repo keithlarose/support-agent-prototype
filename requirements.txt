@@ -1,6 +1,7 @@
 streamlit
-langchain
-langchain-google-genai
-langchain-community
+langchain==0.2.16
+langchain-community==0.2.16
+langchain-google-genai==1.0.10
+langchain-core==0.2.38
 faiss-cpu
 beautifulsoup4
