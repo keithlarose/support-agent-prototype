@@ -3,10 +3,10 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_community.document_loaders import WebBaseLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
-from langchain_core.prompts import ChatPromptTemplate 
+from langchain_core.prompts import ChatPromptTemplate
 
 # 1. App Configuration
 st.set_page_config(page_title="Knowledge Support Agent", page_icon="🤖")
@@ -22,7 +22,7 @@ with st.sidebar:
         if not api_key or not website_url:
             st.error("Please provide both an API Key and a URL.")
         else:
-            with st.spinner("Reading website..."):
+            with st.spinner("Downloading local embedding model (this takes a minute)..."):
                 try:
                     # Load Data
                     loader = WebBaseLoader(website_url)
@@ -32,13 +32,13 @@ with st.sidebar:
                     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
                     splits = text_splitter.split_documents(docs)
                     
-                    # Create Vector Store (Memory)
-                    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=api_key)
+                    # Create Vector Store (Memory) - USING LOCAL CPU MODEL NOW
+                    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
                     vectorstore = FAISS.from_documents(documents=splits, embedding=embeddings)
                     
                     # Save to session state
                     st.session_state.vectorstore = vectorstore
-                    st.success("Knowledge Base Loaded!")
+                    st.success("Knowledge Base Loaded! (No API limits used)")
                 except Exception as e:
                     st.error(f"Error loading URL: {e}")
 
